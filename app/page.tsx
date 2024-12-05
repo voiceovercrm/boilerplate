@@ -1,101 +1,78 @@
-import Image from "next/image";
+
+
+"use client"
+// pages/index.js
+import { useState } from 'react';
+import styles from '../styles/Home.module.css';
+import { ArrowLeftOnRectangleIcon, CurrencyRupeeIcon, BoltIcon, ChatBubbleLeftIcon, ExclamationTriangleIcon, HandThumbDownIcon, HandThumbUpIcon, LinkIcon, MoonIcon, PaperAirplaneIcon, PencilSquareIcon, PlusIcon, SignalIcon, SunIcon, TrashIcon, UserIcon } from "@heroicons/react/24/outline"
+import Link from 'next/link'
 
 export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Namaste, Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+  const [input, setInput] = useState('');
+  //const [messages, setMessages] = useState([]);
+  const [messages, setMessages] = useState<Array<{ text: string; sender: string }>>([]);
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (input.trim()) {
+      setMessages([...messages, { text: input, sender: 'user' }]);
+      setInput('');
+      // Here you would typically call an API to get a response
+      setTimeout(() => {
+        setMessages(messages => [...messages, { text: 'This is a sample response.', sender: 'ai' }]);
+      }, 1000);
+    }
+  };
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+  return (
+    <div className={styles.container}>
+      <div className='h-screen bg-white text-black flex'>
+      <div className='w-64 flex flex-col'>
+                <div className='relative flex flex-col flex-grow overflow-y-auto bg-black pt-5'>
+                    <button className='flex space-x-1 p-2 hover:bg-gray-700 mx-2 border border-gray-300 rounded text-white'>
+                        <PlusIcon className='h-6 w-6' />
+                        New Chat
+                    </button>
+                    <div className='mt-5 flex flex-col text-white'>
+                        <Link href="/home" className='flex space-x-2 p-2 hover:bg-black/80 mx-2 bg-gray-700 rounded text-white items-center'>
+                            <CurrencyRupeeIcon className='h-6 w-6 text-gray-300' />
+                            <p>Payments</p>
+                        </Link>
+                    </div>
+                    <div className='absolute bottom-0 inset-x-0 border-t border-gray-200/50 mx-2 py-6 px-2'>
+                        <Link href="/home" className='flex space-x-2 p-2 hover:bg-black/80 mx-2 rounded text-white text-sm items-center'>
+                            <UserIcon className='h-5 w-5 text-gray-300' />
+                            <p>Profile</p>
+                        </Link>
+                        <Link href="/home" className='flex space-x-2 p-2 hover:bg-black/80 mx-2 rounded text-white text-sm items-center'>
+                            <ArrowLeftOnRectangleIcon className='h-5 w-5 text-gray-300' />
+                            <p>Logout</p>
+                        </Link>
+                    </div>
+
+                </div>
+            </div>
+      </div>
+
+      <div className={styles.chatSection}>
+        <div className={styles.messagesArea}>
+          {messages.map((message, index) => (
+            <div key={index} className={`${styles.message} ${styles[message.sender]}`}>
+              {message.text}
+            </div>
+          ))}
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
+        <form onSubmit={handleSubmit} className={styles.inputArea}>
+          <input
+            type="text"
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            placeholder="Type your message here..."
+            className={styles.input}
           />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+          <button type="submit" className={styles.sendButton}>Send</button>
+        </form>
+      </div>
+
     </div>
   );
 }
